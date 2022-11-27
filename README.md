@@ -1,2 +1,2 @@
 # Useful_scripts
-Scripts to counting GC3
+Scripts to count GC3

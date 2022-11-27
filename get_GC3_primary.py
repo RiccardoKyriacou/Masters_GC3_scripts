@@ -6,10 +6,6 @@ import statistics
 from Bio import SeqIO
 from collections import defaultdict
 
-
-# Author: Peter Mulhair and Riccardo Kyriacou
-# Date: 29/03/2022
-
 '''
 Script to calculate GC3 content per
 chromosome/scaffold in a genome with

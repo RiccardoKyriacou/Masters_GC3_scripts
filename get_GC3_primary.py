@@ -7,7 +7,7 @@ from Bio import SeqIO
 from collections import defaultdict
 
 
-# Author: Peter Mulhair
+# Author: Peter Mulhair and Riccardo Kyriacou
 # Date: 29/03/2022
 
 '''

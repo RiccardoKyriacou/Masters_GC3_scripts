@@ -14,5 +14,5 @@ Current script pipeline:
   * (run F and T test on data) 
 * get_singlecopy_iqtree.py
   * (Create an species tree for all speices used) 
-*order_by_species-tree.py
- *(Order comparison tsv file according to the produced species tree)
+* order_by_species-tree.py
+ * (Order comparison tsv file according to the produced species tree)

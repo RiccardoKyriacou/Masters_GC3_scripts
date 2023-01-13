@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-from distutils.command.build_scripts import first_line_re
 import glob
 import argparse
-import statistics
 from Bio import SeqIO
 from collections import defaultdict
 

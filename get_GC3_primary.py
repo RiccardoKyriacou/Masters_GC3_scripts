@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 import glob
 import argparse
 from Bio import SeqIO
 from collections import defaultdict
+
 
 '''
 Script to calculate GC3 content per
@@ -46,7 +48,8 @@ def outlier_cutoff(GC_content, sp_name, header, seq, seq_len, chrom_info, outf1,
             outf1.write(f"{sp_name}\t{chrm}\t{header}_{chrom_info}\n")
         else:
             outf1.write(f"{sp_name}\t{chrm}\t{header}_{chrom_info}\tNo_ATG_StartCodon\n")
-    
+            
+#Main function that counts GC3, as well as storing useful data for output 
 def count_GC3(sp_group):
     with open(args.outfile, 'w') as outf, open(f"outlierGC3_cds_c{args.cutoff}_n{args.nucleotide}.tsv", 'w') as outf1:
         for fasta in glob.glob(args.path + '*'):
@@ -73,7 +76,7 @@ def count_GC3(sp_group):
                                 geneID = header.split(' ')[3].split(':')[1]
                                 geneID_header[geneID] = header
 
-                    for record in SeqIO.parse(f, 'fasta'):
+                    for record in SeqIO.parse(f, 'fasta'): #Parsing cds files to get gene info
                         header = record.description
                         try:
                             chrom = header.split(':')[1]
@@ -122,3 +125,4 @@ def main():
         count_GC3(sp_group)
 
 main()
+

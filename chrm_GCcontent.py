@@ -59,9 +59,9 @@ def calculate_GC(args_outfile, args_path, sp_names, sp_group):
                         GC_content = (GC_count/seq_len)*100 #Measure GC content by dividing number of Gs and Cs by the scaffold length
                         if seq_len >= args.cutoff:
                             if args.info:
-                                outF.write(species + '\t' + group + '\t' + str(seq_len) + '\t' + str(GC_content) + '\n')
+                                outF.write(f"{species}\t{group}\t{str(seq_len)}\t{str(GC_content)}\n")
                             else:
-                                outF.write(sp_name + '\t' + str(seq_len) + '\t' + str(GC_content) + '\n')
+                                outF.write(f"{sp_name}\t{str(seq_len)}\t{str(GC_content)}\n")
                             
 def main():
     if args.info:

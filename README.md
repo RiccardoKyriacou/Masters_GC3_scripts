@@ -2,6 +2,8 @@
 Scripts to count GC3
 
 Current script pipeline:
+* chrm_GCcontent.py 
+  * (calculate GC content per chromosome)
 * get_GC3_priamry.py 
   * (calculate GC3 content per chromosome)
 * prot_blast.py 

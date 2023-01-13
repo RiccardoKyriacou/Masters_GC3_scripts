@@ -3,7 +3,6 @@ import argparse
 from Bio import SeqIO
 from collections import defaultdict
 
-
 '''
 Script to calculate GC3 content per
 chromosome/scaffold in a genome with

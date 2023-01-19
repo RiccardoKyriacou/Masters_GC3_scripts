@@ -221,13 +221,13 @@ def get_outlier_GC3_comparison(fn, orthogroup_lst ):
 
 def main():
     #Get CDS for each OG
-    # cds_dict = get_cds_ID_dict(args.cds)
-    # get_OG_cds_fasta(args.singlecopy, cds_dict)
+    cds_dict = get_cds_ID_dict(args.cds)
+    get_OG_cds_fasta(args.singlecopy, cds_dict)
    
     #Run mafft and trimal 
-    # run_mafft(args.singlecopy)
-    # run_trimal(args.singlecopy)
-    # print("Calculating aligned GC3...")
+    run_mafft(args.singlecopy)
+    run_trimal(args.singlecopy)
+    print("Calculating aligned GC3...")
    
     #Calculate GC3 - getting appropriate dictionaries
     name_dict = get_sp_ID_dict(args.cds)

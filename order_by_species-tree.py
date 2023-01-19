@@ -41,8 +41,9 @@ def order_tsv(tsv, sp_lst):
                         if Species == sp:
                             outF.write(f"{Orthogroup}\t{Species}\t{gene_ID}\t{chrm_no}\t{GC3}\t{Outlier}\t{Position}")
 
-def main():
+def order_by_species():
     sp_list = parse_list(args.species)
     order_tsv(args.tsv, sp_list)
 
-main()
+if __name__ == "__main__":
+    order_by_species()

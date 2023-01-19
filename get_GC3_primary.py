@@ -48,8 +48,7 @@ def outlier_cutoff(GC_content, sp_name, header, seq, seq_len, chrom_info, outf1,
             outf1.write(f"{sp_name}\t{chrm}\t{header}_{chrom_info}\n")
         else:
             outf1.write(f"{sp_name}\t{chrm}\t{header}_{chrom_info}\tNo_ATG_StartCodon\n")
-            
-#Main function that counts GC3, as well as storing useful data for output 
+    
 def count_GC3(sp_group):
     with open(args.outfile, 'w') as outf, open(f"outlierGC3_cds_c{args.cutoff}_n{args.nucleotide}.tsv", 'w') as outf1:
         for fasta in glob.glob(args.path + '*'):
@@ -124,5 +123,5 @@ def main():
         genome_list()
         count_GC3(sp_group)
 
-main()
-
+if __name__ == "__main__":
+    main()

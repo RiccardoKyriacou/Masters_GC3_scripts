@@ -14,7 +14,7 @@ and primary tenplate data
 
 parse = argparse.ArgumentParser()
 
-parse.add_argument("-p", "--path",type=str, help="path to genome fasta files",required=True)
+parse.add_argument("-p", "--path",type=str, help="path to cds fasta files",required=True)
 parse.add_argument("-c", "--cutoff",type=int, help="cutoff for GC3 to be included as outliers ",required=True)
 parse.add_argument("-o", "--outfile",type=str, help="name of output file",required=True)
 parse.add_argument("-i", "--info",type=str, help="tsv file with species phylum information",required=False)
@@ -50,7 +50,7 @@ def outlier_cutoff(GC_content, sp_name, header, seq, seq_len, chrom_info, outf1,
             outf1.write(f"{sp_name}\t{chrm}\t{header}_{chrom_info}\tNo_ATG_StartCodon\n")
     
 def count_GC3(sp_group):
-    with open(args.outfile, 'w') as outf, open(f"outlierGC3_cds_c{args.cutoff}_n{args.nucleotide}.tsv", 'w') as outf1:
+    with open(args.outfile, 'w') as outf, open(f"outlierGC3_cds_c{args.cutoff}_n{args.nucleotides}.tsv", 'w') as outf1:
         for fasta in glob.glob(args.path + '*'):
             if fasta.endswith(('.fa', '.fasta', '.fas', '.fna')):
                 genome = fasta.split('/')[-1]

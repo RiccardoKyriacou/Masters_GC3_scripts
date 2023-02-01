@@ -1,4 +1,4 @@
-#Scritps to calculate GC3 
+# Scripts to calculate GC3 
 
 * get_GC3_primary 
 * orthofinderGC3.py

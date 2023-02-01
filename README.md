@@ -1,4 +1,4 @@
-# Useful_scripts
+# Master's scripts
 Scripts to count GC3
 
 Current script pipeline:

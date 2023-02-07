@@ -27,7 +27,7 @@ parse.add_argument("-s", "--species_tree",type=str, help="path to orthofinder sp
 
 args = parse.parse_args()
 
-#Parse tsv of all OGs which containg gene at GC3 > 85% 
+#Parse tsv of all OGs which containg gene at GC3 > 95% (Lep) or 85% (other clades) 
 def parse_tsv(tsv):
     OG_lst = []
     with open(tsv) as f: 
@@ -102,7 +102,6 @@ def create_RER_input(gene_tree_files):
 
                     outf.write(f"{OG_name}\t{tree_data}\n")
 
-
 #From here, script is looking to create a binary tree file for each OG 
 #These are needed for binary trait analysis in RER converge 
 #Each Binary tree file contains a binary tree with 1s for species with high GC3 
@@ -142,7 +141,7 @@ def get_all_binary_trees(tree_skeleton, highGC3_sp_OG_dict):
             binary_tree = tree_skeleton #Reset binary tree to skeleton
             for sp in species: #For each high GC3 species
                 
-                binary_tree = binary_tree.replace(f"{sp}:0", f"{sp}:1")  #Replace 0 with one
+                binary_tree = binary_tree.replace(f"{sp}:0", f"{sp}:1")  #Replace 0 with 1 for high GC3 sp
 
             outf.write(binary_tree)
 
@@ -173,14 +172,12 @@ def main():
     # RER requires "binary trees" for binary trait calculations 
     # Therefore the rest of this scrip will now look to etting all 
     # binary trees for RER analysis
-    
+    print(f"Creating binary trees for {len(OG_lst)} OGs with GC3 outliers...")
     #Firstly, get a tree "skeleton" with same topology as gene tree 
     tree_skeleton = get_binary_tree_skeleton(f"combined_genetrees.txt")
-    #Get a list of high GC3 genes from tsv file 
-    OG_lst = parse_tsv(args.path)
     #Make dictionary of each high GC3 OG : list of species in which gene is high GC
     highGC3_OG_dict = get_highGC3_OG_dict(args.path, OG_lst)
-    #Main function 
+    #Main function to get trees
     get_all_binary_trees(tree_skeleton, highGC3_OG_dict)
 
 

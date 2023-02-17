@@ -19,13 +19,15 @@ This script:
 
 # Usage: python3 get_genetrees.py --path ~/GC_analysis/GC_Lep/GC_cds_Lep/results/GC3/1to1_orthologues/outlier_GC3-comparison.tsv --out ../data/1to1_highGC3_OGs/ --species_tree ../data/Species_Tree/SpeciesTree_rooted_node_labels.txt
 
-parse = argparse.ArgumentParser()
+if __name__ == "__main__":
 
-parse.add_argument("-p", "--path",type=str, help="path to outlier_GC3-comparison.tsv file to pull relevant OGS", required = True)
-parse.add_argument("-o", "--out",type=str, help="path to output for OGs", required = True)
-parse.add_argument("-s", "--species_tree",type=str, help="path to orthofinder species tree", required = True)
+    parse = argparse.ArgumentParser()
 
-args = parse.parse_args()
+    parse.add_argument("-p", "--path",type=str, help="path to outlier_GC3-comparison.tsv file to pull relevant OGS", required = True)
+    parse.add_argument("-o", "--out",type=str, help="path to output for OGs", required = True)
+    parse.add_argument("-s", "--species_tree",type=str, help="path to orthofinder species tree", required = True)
+
+    args = parse.parse_args()
 
 #Parse tsv of all OGs which containg gene at GC3 > 95% (Lep) or 85% (other clades) 
 def parse_tsv(tsv):
@@ -41,10 +43,10 @@ def parse_tsv(tsv):
     return set(OG_lst)
 
 #Copy each file specified in OG-lst to new dir 
-def move_files(OG_lst, output_dir):
+def move_files(OG_lst, output_dir, tsv_path):
     for orthogroup in OG_lst:
-        filename = args.path.split("/")[-1]
-        OG_path = args.path.split(filename)[0]
+        filename = tsv_path.split("/")[-1]
+        OG_path = tsv_path.split(filename)[0]
         aligned_OG = OG_path + orthogroup + ".fa.mafft"
         shutil.copy(aligned_OG, output_dir, follow_symlinks=True)
 
@@ -77,9 +79,13 @@ def rename_trimal_files(trimal_files, ID_sp_dict):
         with open(alignment) as f, open(f"{alignment}.renamed", "w") as outf: #Create .renamed folders 
             #Parse trimal folders to get gene ID and seq
             for record in SeqIO.parse(f, 'fasta'): 
-                Gene_ID = record.id
+                gene_ID = record.id
                 seq = str(record.seq)
-                sp_name = ID_sp_dict[Gene_ID] #Match gene_ID to seq
+
+                try:
+                    sp_name = ID_sp_dict[gene_ID] #Match gene_ID to seq
+                except:
+                    sp_name = gene_ID
 
                 outf.write(f">{sp_name}\n{seq}\n") #Re-write.rename file
 
@@ -148,7 +154,7 @@ def get_all_binary_trees(tree_skeleton, highGC3_sp_OG_dict):
 def main():
     #Parse tsv to get list of relevant OGS
     OG_lst = parse_tsv(args.path)
-    move_files(OG_lst, args.out) #copy files to new directory
+    move_files(OG_lst, args.out, args.path) #copy files to new directory
     print(f"Copied {len(OG_lst)} OGs to {args.out}")  
     #Running trimal
     print(f"Running trimal (gappyout) for {len(OG_lst)} OGs...")

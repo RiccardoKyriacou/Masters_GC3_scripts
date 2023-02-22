@@ -3,7 +3,6 @@ import os
 import glob
 import argparse
 from Bio import SeqIO
-from Bio.Seq import Seq
 from collections import defaultdict
 from get_genetrees import parse_tsv, move_files, run_trimal, get_OG_sp_dict, rename_trimal_files
 
@@ -169,7 +168,7 @@ def get_sneath_value(gene_lst_outgroup, gene_lst_ingroup):
         
     return adjusted_sneath_value
 
-#These next two fucntions make_OG_dict() and get_R_output simply re-format the sneath_values.tsv file 
+#These next two fucntions: make_OG_dict() and get_R_output simply re-format the sneath_values.tsv file 
 #to a format that can be plotted in R whereby one species on x and anotehr on y, plotting the coorrds of each point
 #as the sneath for (species_x, species_y)
 
@@ -185,7 +184,24 @@ def make_OG_dict(sneath_output):
             
             OG_dict[OG][sp] = sneath
     
-    return OG_dict    
+    return OG_dict   
+
+# To get GC3 alongside the snetah values for each species, need to make a dictionary for every species with GC3 value
+def get_ingroup_id_GC3_dict(tsv, sp_name):
+    id_GC3_dict = {}
+    with open(tsv) as f:        
+        for line in f:
+            if line.startswith("Orthogroup"): #Skip header of tsv file
+                continue
+            else:
+                OG = line.split("\t")[0]
+                species = line.split("\t")[1]
+                GC3 = line.split("\t")[3]
+
+                if species == sp_name:
+                    id_GC3_dict[OG] = GC3
+    
+    return id_GC3_dict
 
 # Output new file as a table in format
 # OG   SP1 SP2 SP3
@@ -194,12 +210,27 @@ def make_OG_dict(sneath_output):
 def create_tsv(OG_dict, ingroup1, ingroup2, ingroup3):
     with open("sneath_R_output.tsv", "w") as outf:
         #Open and write headers for table
-        outf.write("{:<9}\t{:<23}\t{:<23}\t{:<23}\n".format("Orthogroup", ingroup1, ingroup2, ingroup3))
+        outf.write("{:<9}\t{:<23}\t{:<23}\t{:<23}\t{:<23}\t{:<23}\t{:<23}\n".format("Orthogroup", ingroup1, f"{ingroup1}_GC3", ingroup2, f"{ingroup2}_GC3", ingroup3, f"{ingroup3}_GC3"))
+        
+        #MAke three dictionaries, each of the OG : GC3 for each ingroup species
+        ingroup1_dict = get_ingroup_id_GC3_dict(args.trimmed, ingroup1)
+        ingroup2_dict = get_ingroup_id_GC3_dict(args.trimmed, ingroup2)
+        ingroup3_dict = get_ingroup_id_GC3_dict(args.trimmed, ingroup3)
+
         for OG, species_sneath in OG_dict.items():
+            
+            #Retieve sneath value ffor species 1
             species1 = species_sneath.get(ingroup1, "")
+            #Get the gC3 for ingroup species 1 
+            ingroup1_GC3 = ingroup1_dict[OG]       
+            
             species2 = species_sneath.get(ingroup2, "")
+            ingroup2_GC3 = ingroup2_dict[OG]
+
             species3 = species_sneath.get(ingroup3, "")
-            outf.write("{:<9}\t{:<23}\t{:<23}\t{:<23}\n".format(OG, species1, species2, species3))
+            ingroup3_GC3 = ingroup3_dict[OG]
+
+            outf.write("{:<9}\t{:<23}\t{:<23}\t{:<23}\t{:<23}\t{:<23}\t{:<23}\n".format(OG, species1, ingroup1_GC3, species2, ingroup2_GC3, species3, ingroup3_GC3))
 
 
 def main():

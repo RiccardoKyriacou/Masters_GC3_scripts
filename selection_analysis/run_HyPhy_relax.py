@@ -94,9 +94,8 @@ def get_labeled_tree(tsv, species_tree, output_dir, src_path):
 def run_hyphy_relax(codon_alignment, labelled_tree):
     #Command line argument to run hyphy (may need to conda install hyphy)
     unix(f"hyphy relax --alignment {codon_alignment} --tree {labelled_tree} --test Foreground", shell=True)
-
-#Parallel run of relax
-def parallel_relax_run(output_dir):
+      
+def parallel_relax_run(output_dir, n):
     job_dict = {} 
     for codon_alignment in glob.glob(f"{output_dir}*.aligned_codon"):
         for labelled_tree in glob.glob(f"{output_dir}*.nwk"):
@@ -104,7 +103,7 @@ def parallel_relax_run(output_dir):
             job_dict[codon_alignment] =labelled_tree
 
     #Iterate though dict to run jobs
-    Parallel(n_jobs=27)(delayed(run_hyphy_relax)(alignment, tree) for alignment, tree in job_dict.items())   
+    Parallel(n_jobs=n)(delayed(run_hyphy_relax)(alignment, tree) for alignment, tree in job_dict.items())   
 
 def main():
     #Move files into a new dir W
@@ -118,7 +117,9 @@ def main():
     get_labeled_tree(args.tsv, args.species, args.out, current_path)
     #Run HyPhy relax in parallel 
     print("Running HyPhy RELAX...")
-    parallel_relax_run(args.out)
+    #Get number of runs fo HyPhy (number of unique BUSCO genes of goven cutoff)
+    n = int(len(BUSCO_lst))
+    parallel_relax_run(args.out, n)
 
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
